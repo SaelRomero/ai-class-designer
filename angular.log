@@ -1,0 +1,47 @@
+The "publicHost" option will not be used because it is not supported by the "@angular-devkit/build-angular:application" builder.
+- Building...
+
+Initial chunk files | Names         |  Raw size
+polyfills.js        | polyfills     |  88.09 kB | 
+main.js             | main          |  23.50 kB | 
+styles.css          | styles        |  13.44 kB | 
+
+                    | Initial total | 125.03 kB
+
+Application bundle generation complete. [4.150 seconds]
+
+Watch mode enabled. Watching for file changes...
+  ➜  Local:   http://127.0.0.1:4200/ai-class-designer/
+- Changes detected. Rebuilding...
+
+Initial chunk files | Names  | Raw size
+styles.css          | styles | 14.61 kB | 
+
+Application bundle generation complete. [0.595 seconds]
+
+HMR update sent to client(s).
+- Changes detected. Rebuilding...
+
+Initial chunk files | Names | Raw size
+main.js             | main  | 23.48 kB | 
+
+Application bundle generation complete. [0.512 seconds]
+
+Page reload sent to client(s).
+- Changes detected. Rebuilding...
+
+Initial chunk files | Names  | Raw size
+styles.css          | styles | 14.60 kB | 
+
+Application bundle generation complete. [0.375 seconds]
+
+HMR update sent to client(s).
+- Changes detected. Rebuilding...
+
+Initial chunk files | Names | Raw size
+main.js             | main  | 23.51 kB | 
+
+Application bundle generation complete. [0.531 seconds]
+
+Page reload sent to client(s).
+Killed

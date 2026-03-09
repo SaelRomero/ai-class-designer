@@ -105,7 +105,7 @@ export class AppComponent {
         margin:       10,
         filename:     `Planeacion_${this.topic() || 'Clase'}.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, useCORS: true },
+        html2canvas: { scale: 3, useCORS: true, letterRendering: true, logging: false },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
       };

@@ -10,6 +10,15 @@ body {
 
 
 #pdf-content {
+  /* Text Rendering Fixes */
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
   color: #334155;
   line-height: 1.6;
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -163,9 +172,69 @@ body {
 
 /* Reglas de Impresión */
 @media print {
-  body {
-    background-color: #ffffff !important;
+  body { background-color: #ffffff !important; }
+  #pdf-content { background-color: #ffffff !important; padding: 0; }
+  
+  /* Remove outer card borders/shadows/backgrounds in print to prevent ugly sliced shapes */
+  .card, section {
+    box-shadow: none !important;
+    border: none !important;
+    background: transparent !important;
+    padding: 0 1rem !important;
+    margin-bottom: 2rem !important;
+    break-inside: auto;
+    page-break-inside: auto;
   }
+  
+  /* The stages and inner items are what we protect from breaking */
+  .stage, article {
+    box-shadow: none !important;
+    border: 1px solid #e2e8f0 !important;
+    border-top: 3px solid #3b82f6 !important;
+    background-color: #f8fafc !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin-bottom: 1.5rem !important;
+    padding: 1.5rem !important;
+  }
+
+  /* Protect titles and list items from being sliced */
+  h2, h3, h4 {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  li {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin-bottom: 0.5rem !important;
+  }
+  p {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Header stays intact */
+  header {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    background-color: #0f172a !important;
+    color: #ffffff !important;
+    border-radius: 0.5rem !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  header span {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+  }
+}
   #pdf-content {
     background-color: #ffffff !important;
     padding: 0;

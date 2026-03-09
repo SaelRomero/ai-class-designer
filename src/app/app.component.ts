@@ -1,8 +1,8 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import html2pdf from 'html2pdf.js';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +13,7 @@ import html2canvas from 'html2canvas';
 })
 export class AppComponent {
   title = 'ai-class-designer';
+  sanitizer = inject(DomSanitizer);
 
   // Signals for form
   subject = signal('');
@@ -23,7 +24,7 @@ export class AppComponent {
 
   // UI State
   isGenerating = signal(false);
-  generatedLesson = signal('');
+  generatedLesson = signal<SafeHtml | string>('');
 
   async generateLesson() {
     if(!this.subject() || !this.topic() || !this.gradeLevel()) {
@@ -49,7 +50,8 @@ export class AppComponent {
       if (!response.ok) throw new Error('Error en la red');
       
       const data = await response.json();
-      this.generatedLesson.set(data.html || 'No se generó contenido.');
+      const rawHtml = data.html || 'No se generó contenido.';
+      this.generatedLesson.set(this.sanitizer.bypassSecurityTrustHtml(rawHtml));
     } catch (error) {
       console.error(error);
       alert('Hubo un error al generar la planeación. Revisa que el proxy y Ollama estén corriendo.');
@@ -63,16 +65,16 @@ export class AppComponent {
     if (!element) return;
     
     try {
-      // Configuramos html2canvas para que capture bien el estilo
-      const canvas = await html2canvas(element, { scale: 2, useCORS: true });
-      const imgData = canvas.toDataURL('image/png');
+      const opt = {
+        margin:       10,
+        filename:     `Planeacion_${this.topic() || 'Clase'}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+      };
       
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`Planeacion_${this.topic() || 'Clase'}.pdf`);
+      html2pdf().set(opt as any).from(element).save();
     } catch(err) {
       console.error('Error al generar PDF', err);
       alert('Hubo un problema al generar el PDF.');

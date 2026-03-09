@@ -8,7 +8,6 @@ body {
     background-color: #f3f4f6;
 }
 
-
 #pdf-content {
   /* Text Rendering Fixes */
   * {
@@ -38,7 +37,7 @@ body {
     h1 {
       font-size: 1.875rem;
       font-weight: 700;
-      letter-spacing: -0.025em;
+      letter-spacing: normal;
       margin: 0 0 1rem 0;
       color: #ffffff;
       line-height: 1.2;
@@ -59,7 +58,7 @@ body {
       border-radius: 9999px; /* Pill style */
       font-size: 0.75rem;
       font-weight: 500;
-      letter-spacing: 0.025em;
+      letter-spacing: normal;
       color: #f8fafc;
       text-transform: uppercase;
     }
@@ -89,7 +88,7 @@ body {
     padding-bottom: 0.25rem;
     border-bottom: 1px solid #f3f4f6;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: normal;
   }
 
   /* Etapas de Desarrollo (Stages) */
@@ -109,7 +108,7 @@ body {
       margin-top: 0;
       margin-bottom: 1rem;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: normal;
     }
 
     h4 {
@@ -180,7 +179,7 @@ body {
     box-shadow: none !important;
     border: none !important;
     background: transparent !important;
-    padding: 0 1rem !important;
+    padding: 0 !important; /* Quitar padding para que el contenido fluya limpio sin caja */
     margin-bottom: 2rem !important;
     break-inside: auto;
     page-break-inside: auto;
@@ -233,44 +232,5 @@ body {
     background-color: #1e293b !important;
     border-color: #334155 !important;
     color: #f8fafc !important;
-  }
-}
-  #pdf-content {
-    background-color: #ffffff !important;
-    padding: 0;
-  }
-  .card, section {
-    box-shadow: none !important;
-    border: 1px solid #d1d5db !important;
-    page-break-inside: auto;
-    break-inside: auto;
-  }
-  .stage, article, li {
-    page-break-inside: avoid;
-    break-inside: avoid;
-  }
-  h2, h3, h4 {
-    page-break-after: avoid;
-    break-after: avoid;
-  }
-  header {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-    background-color: #0f172a !important;
-    color: #ffffff !important;
-    border-radius: 0.5rem !important;
-  }
-  header span {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-    background-color: #1e293b !important;
-    border-color: #334155 !important;
-    color: #f8fafc !important;
-  }
-  .stage {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-    background-color: #f8fafc !important;
-    border-top: 3px solid #3b82f6 !important;
   }
 }

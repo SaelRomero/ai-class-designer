@@ -3,6 +3,13 @@ const cors = require('cors');
 const axios = require('axios');
 
 const app = express();
+
+// Aumentar tiempo limite a 5 minutos
+app.use((req, res, next) => {
+  req.setTimeout(300000);
+  res.setTimeout(300000);
+  next();
+});
 app.use(cors());
 app.use(express.json());
 

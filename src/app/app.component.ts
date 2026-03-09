@@ -1,8 +1,24 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+
 import html2pdf from 'html2pdf.js';
+
+
+export interface LessonPlan {
+  titulo: string;
+  grado: string;
+  duracion: string;
+  materia: string;
+  tema: string;
+  objetivos: string[];
+  materiales: string[];
+  inicio: string[];
+  desarrollo: { titulo: string; descripcion: string; duracion: string; }[];
+  cierre: string[];
+  evaluacion: string[];
+  observaciones: string;
+}
 
 @Component({
   selector: 'app-root',
@@ -13,7 +29,7 @@ import html2pdf from 'html2pdf.js';
 })
 export class AppComponent {
   title = 'ai-class-designer';
-  sanitizer = inject(DomSanitizer);
+  
 
   // Signals for form
   subject = signal('');
@@ -24,7 +40,7 @@ export class AppComponent {
 
   // UI State
   isGenerating = signal(false);
-  generatedLesson = signal<SafeHtml | string>('');
+  generatedLesson = signal<LessonPlan | null>(null);
 
   async generateLesson() {
     if(!this.subject() || !this.topic() || !this.gradeLevel()) {
@@ -50,8 +66,28 @@ export class AppComponent {
       if (!response.ok) throw new Error('Error en la red');
       
       const data = await response.json();
-      const rawHtml = data.html || 'No se generó contenido.';
-      this.generatedLesson.set(this.sanitizer.bypassSecurityTrustHtml(rawHtml));
+      const rawResponse = data.html || '';
+      
+      // Extracción matemática brutal del JSON (Lección de MEMORY.md)
+      const startIndex = rawResponse.indexOf('{');
+      const endIndex = rawResponse.lastIndexOf('}');
+      
+      if (startIndex === -1 || endIndex === -1) {
+        throw new Error('El modelo no devolvió un JSON válido');
+      }
+      
+      const jsonString = rawResponse.substring(startIndex, endIndex + 1);
+      const parsedData = JSON.parse(jsonString) as LessonPlan;
+      
+      // Validación básica y fallbacks
+      parsedData.objetivos = parsedData.objetivos || ['No se especificaron objetivos'];
+      parsedData.materiales = parsedData.materiales || ['No se especificaron materiales'];
+      parsedData.inicio = parsedData.inicio || [];
+      parsedData.desarrollo = parsedData.desarrollo || [];
+      parsedData.cierre = parsedData.cierre || [];
+      parsedData.evaluacion = parsedData.evaluacion || [];
+      
+      this.generatedLesson.set(parsedData);
     } catch (error) {
       console.error(error);
       alert('Hubo un error al generar la planeación. Revisa que el proxy y Ollama estén corriendo.');

@@ -60,8 +60,96 @@
   <!-- PANEL DERECHO (Lienzo/Resultado) -->
   <main class="flex-1 p-8 overflow-y-auto block bg-gray-50">
     <div class="w-full max-w-4xl mx-auto bg-white shadow-xl rounded-lg p-10 h-fit min-h-full border border-gray-100 relative">
-      @if (generatedLesson()) {
-        <div id="pdf-content" class="p-4 bg-white" [innerHTML]="generatedLesson()"></div>
+      
+      @if (generatedLesson(); as lesson) {
+        <div id="pdf-content" class="p-4 bg-white">
+          <header>
+            <h1>{{ lesson.titulo || 'Planeación Didáctica' }}</h1>
+            <div>
+              <span>Materia: {{ lesson.materia }}</span>
+              <span>Grado: {{ lesson.grado }}</span>
+              <span>Duración: {{ lesson.duracion }}</span>
+            </div>
+          </header>
+
+          <section class="card">
+            <h2>Objetivos</h2>
+            <ul>
+              @for (obj of lesson.objetivos; track $index) {
+                <li>{{ obj }}</li>
+              } @empty {
+                <li>No se especificaron objetivos.</li>
+              }
+            </ul>
+          </section>
+
+          <section class="card">
+            <h2>Materiales</h2>
+            <ul>
+              @for (mat of lesson.materiales; track $index) {
+                <li>{{ mat }}</li>
+              } @empty {
+                <li>No se especificaron materiales.</li>
+              }
+            </ul>
+          </section>
+
+          <section class="card">
+            <h2>Desarrollo de la Clase</h2>
+            
+            @if (lesson.inicio && lesson.inicio.length > 0) {
+              <article class="stage">
+                <h3>Inicio</h3>
+                <ul>
+                  @for (act of lesson.inicio; track $index) {
+                    <li>{{ act }}</li>
+                  }
+                </ul>
+              </article>
+            }
+
+            @if (lesson.desarrollo && lesson.desarrollo.length > 0) {
+              <article class="stage">
+                <h3>Desarrollo</h3>
+                @for (act of lesson.desarrollo; track $index) {
+                  <div class="mb-4">
+                    <h4 class="font-bold text-gray-800">{{ act.titulo || 'Actividad' }} <span class="text-sm font-normal text-gray-500">({{ act.duracion || 'N/A' }})</span></h4>
+                    <p class="text-gray-600">{{ act.descripcion || '' }}</p>
+                  </div>
+                }
+              </article>
+            }
+
+            @if (lesson.cierre && lesson.cierre.length > 0) {
+              <article class="stage">
+                <h3>Cierre</h3>
+                <ul>
+                  @for (act of lesson.cierre; track $index) {
+                    <li>{{ act }}</li>
+                  }
+                </ul>
+              </article>
+            }
+          </section>
+
+          <section class="card">
+            <h2>Evaluación</h2>
+            <ul>
+              @for (ev of lesson.evaluacion; track $index) {
+                <li>{{ ev }}</li>
+              } @empty {
+                <li>No se especificaron criterios de evaluación.</li>
+              }
+            </ul>
+          </section>
+
+          @if (lesson.observaciones) {
+            <section class="card">
+              <h2>Observaciones y Notas</h2>
+              <p>{{ lesson.observaciones }}</p>
+            </section>
+          }
+        </div>
       } @else {
         <div class="h-full flex flex-col items-center justify-center text-gray-400 opacity-60">
           <svg class="w-16 h-16 mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>

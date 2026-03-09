@@ -20,7 +20,7 @@ Requisitos extra: ${specialRequirements || 'Ninguno'}
 Devuelve SOLO código HTML válido (sin markdown \`\`\`), usando etiquetas semánticas como <h1>, <h2>, <p>, <ul>. No incluyas explicaciones previas.`;
 
         const response = await axios.post('http://host.docker.internal:11434/api/generate', {
-            model: 'llama3:8b',
+            model: 'minimax-m2.5:cloud',
             prompt: prompt,
             stream: false
         });

@@ -40,7 +40,8 @@ body {
       letter-spacing: normal;
       margin: 0 0 1rem 0;
       color: #ffffff;
-      line-height: 1.2;
+      line-height: 1.4; /* Line-height sano para evitar recortes en la parte superior/inferior */
+      overflow: visible; /* Asegurar que no haya recortes */
     }
 
     .meta-container {
@@ -51,18 +52,20 @@ body {
 
     span {
       display: inline-block;
-      vertical-align: middle;
-      line-height: 1;
-      background-color: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      /* padding ajustado para compensar el render de html2canvas */
-      padding: 0.35rem 1rem 0.45rem 1rem;
-      border-radius: 9999px; /* Pill style */
+      /* Eliminamos hacks: padding simétrico exacto */
+      padding: 0.4rem 1rem;
+      border-radius: 9999px;
       font-size: 0.75rem;
-      font-weight: 500;
+      font-weight: 600; /* Un poco más de peso para legibilidad en impresión */
       letter-spacing: normal;
       color: #f8fafc;
       text-transform: uppercase;
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      /* Restablecemos line-height natural para que el motor del navegador centre el texto según sus ascencentes/descendentes */
+      line-height: normal; 
+      vertical-align: middle;
+      overflow: visible;
     }
   }
 

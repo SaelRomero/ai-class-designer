@@ -101,6 +101,10 @@ export class AppComponent {
     if (!element) return;
     
     try {
+      // FIX CORE: Esperar a que las fuentes web y de sistema estén 100% parseadas 
+      // para que html2canvas pueda medir la línea base (baseline) real de la tipografía.
+      await document.fonts.ready;
+
       const opt = {
         margin:       10,
         filename:     `Planeacion_${this.topic() || 'Clase'}.pdf`,

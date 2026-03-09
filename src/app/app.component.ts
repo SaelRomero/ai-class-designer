@@ -34,7 +34,7 @@ export class AppComponent {
     this.isGenerating.set(true);
 
     try {
-      const response = await fetch('/api/generate', {
+      const response = await fetch('/ai-class-designer-api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

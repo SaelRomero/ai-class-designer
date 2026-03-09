@@ -122,3 +122,20 @@ body {
     font-weight: 700;
   }
 }
+
+
+@media print {
+  #pdf-content {
+    background-color: white !important;
+  }
+  .card, .stage, section, article {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+  }
+  header {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}

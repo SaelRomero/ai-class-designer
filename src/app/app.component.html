@@ -62,10 +62,10 @@
     <div class="w-full max-w-4xl mx-auto bg-white shadow-xl rounded-lg p-10 h-fit min-h-full border border-gray-100 relative">
       
       @if (generatedLesson(); as lesson) {
-        <div id="pdf-content" class="p-4 bg-white">
+        <div id="pdf-content">
           <header>
             <h1>{{ lesson.titulo || 'Planeación Didáctica' }}</h1>
-            <div>
+            <div class="meta-container">
               <span>Materia: {{ lesson.materia }}</span>
               <span>Grado: {{ lesson.grado }}</span>
               <span>Duración: {{ lesson.duracion }}</span>

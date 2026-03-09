@@ -23,7 +23,7 @@ export class AppComponent {
   isGenerating = signal(false);
   generatedLesson = signal('');
 
-  generateLesson() {
+  async generateLesson() {
     if(!this.subject() || !this.topic() || !this.gradeLevel()) {
       alert("Por favor llena Materia, Grado y Tema Principal.");
       return;
@@ -31,30 +31,32 @@ export class AppComponent {
     
     this.isGenerating.set(true);
 
-    // Simulated Ollama Response (Fase 1 Placeholder)
-    setTimeout(() => {
-      const mockHTML = `
-        <h1 class="text-3xl font-bold mb-4 border-b pb-2">Plan de Clase: ${this.topic()}</h1>
-        <div class="mb-4 text-gray-700">
-          <p><strong>Materia:</strong> ${this.subject()}</p>
-          <p><strong>Grado:</strong> ${this.gradeLevel()}</p>
-          <p><strong>Duración:</strong> ${this.duration()} minutos</p>
-          <p><strong>Requisitos Extra:</strong> ${this.specialRequirements() || 'Ninguno'}</p>
-        </div>
-        <h2 class="text-2xl font-semibold mt-6 mb-2 text-blue-600">🎯 Objetivo</h2>
-        <p class="mb-4 text-gray-800">El alumno comprenderá los conceptos básicos de ${this.topic()} al final de la sesión.</p>
-        
-        <h2 class="text-2xl font-semibold mt-6 mb-2 text-blue-600">🚀 Apertura (10 min)</h2>
-        <p class="mb-4 text-gray-800">Pregunta detonadora para atrapar la atención. Actividad breve de diagnóstico.</p>
-        
-        <h2 class="text-2xl font-semibold mt-6 mb-2 text-blue-600">📖 Desarrollo (30 min)</h2>
-        <p class="mb-4 text-gray-800">Explicación magistral del tema seguida de ejercicios prácticos en parejas.</p>
+    try {
+      const response = await fetch('http://localhost:3000/api/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          subject: this.subject(),
+          gradeLevel: this.gradeLevel(),
+          topic: this.topic(),
+          duration: this.duration(),
+          specialRequirements: this.specialRequirements()
+        })
+      });
 
-        <h2 class="text-2xl font-semibold mt-6 mb-2 text-blue-600">✅ Cierre (10 min)</h2>
-        <p class="mb-4 text-gray-800">Revisión de respuestas, dudas finales y ticket de salida (una pregunta en papelito).</p>
-      `;
-      this.generatedLesson.set(mockHTML);
+      if (!response.ok) {
+        throw new Error('Error en la respuesta del servidor proxy');
+      }
+
+      const data = await response.json();
+      this.generatedLesson.set(data.html);
+    } catch (error) {
+      console.error('Error generando la planeación:', error);
+      this.generatedLesson.set('<p class="text-red-500">Ocurrió un error al contactar al servidor o a la IA. Revisa la consola para más detalles.</p>');
+    } finally {
       this.isGenerating.set(false);
-    }, 1500);
+    }
   }
 }

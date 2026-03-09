@@ -47,27 +47,15 @@ body {
 
     .meta-container {
       display: flex;
-      gap: 0.5rem;
+      gap: 1.5rem;
       flex-wrap: wrap;
+      color: #cbd5e1;
+      font-size: 0.95rem;
     }
 
     span {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      box-sizing: border-box;
-      padding: 0.25rem 0.75rem;
-      border-radius: 9999px;
-      font-size: 0.75rem;
-      font-weight: 600;
+      font-weight: 500;
       letter-spacing: normal;
-      color: #f8fafc;
-      text-transform: uppercase;
-      background-color: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      line-height: normal; 
-      vertical-align: middle;
-      overflow: visible;
     }
   }
 
@@ -232,12 +220,5 @@ body {
     border-radius: 0.5rem !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
-  }
-  header span {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-    background-color: #1e293b !important;
-    border-color: #334155 !important;
-    color: #f8fafc !important;
   }
 }

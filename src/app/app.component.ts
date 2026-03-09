@@ -1,6 +1,8 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-root',
@@ -32,11 +34,9 @@ export class AppComponent {
     this.isGenerating.set(true);
 
     try {
-      const response = await fetch('/ai-class-designer-api/generate', {
+      const response = await fetch('/api/generate', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           subject: this.subject(),
           gradeLevel: this.gradeLevel(),
@@ -46,17 +46,36 @@ export class AppComponent {
         })
       });
 
-      if (!response.ok) {
-        throw new Error('Error en la respuesta del servidor proxy');
-      }
-
+      if (!response.ok) throw new Error('Error en la red');
+      
       const data = await response.json();
-      this.generatedLesson.set(data.html);
+      this.generatedLesson.set(data.html || 'No se generó contenido.');
     } catch (error) {
-      console.error('Error generando la planeación:', error);
-      this.generatedLesson.set('<p class="text-red-500">Ocurrió un error al contactar al servidor o a la IA. Revisa la consola para más detalles.</p>');
+      console.error(error);
+      alert('Hubo un error al generar la planeación. Revisa que el proxy y Ollama estén corriendo.');
     } finally {
       this.isGenerating.set(false);
+    }
+  }
+
+  async downloadPDF() {
+    const element = document.getElementById('pdf-content');
+    if (!element) return;
+    
+    try {
+      // Configuramos html2canvas para que capture bien el estilo
+      const canvas = await html2canvas(element, { scale: 2, useCORS: true });
+      const imgData = canvas.toDataURL('image/png');
+      
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`Planeacion_${this.topic() || 'Clase'}.pdf`);
+    } catch(err) {
+      console.error('Error al generar PDF', err);
+      alert('Hubo un problema al generar el PDF.');
     }
   }
 }

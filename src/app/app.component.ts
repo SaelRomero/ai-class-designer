@@ -83,7 +83,19 @@ export class AppComponent {
       parsedData.objetivos = parsedData.objetivos || ['No se especificaron objetivos'];
       parsedData.materiales = parsedData.materiales || ['No se especificaron materiales'];
       parsedData.inicio = parsedData.inicio || [];
-      parsedData.desarrollo = parsedData.desarrollo || [];
+      
+      // Mutación defensiva: interceptar textos crudos y envolverlos en el formato correcto
+      if (Array.isArray(parsedData.desarrollo)) {
+        parsedData.desarrollo = parsedData.desarrollo.map(item => {
+          if (typeof item === 'string') {
+            return { titulo: 'Actividad de desarrollo', descripcion: item, duracion: 'Tiempo estimado' };
+          }
+          return item;
+        });
+      } else {
+        parsedData.desarrollo = [];
+      }
+
       parsedData.cierre = parsedData.cierre || [];
       parsedData.evaluacion = parsedData.evaluacion || [];
       

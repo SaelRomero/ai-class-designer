@@ -42,6 +42,10 @@ export class AppComponent {
   isGenerating = signal(false);
   generatedLesson = signal<LessonPlan | null>(null);
 
+  constructor() {
+    (window as any).testRenderHeader = this.testRenderHeader.bind(this);
+  }
+
   async generateLesson() {
     if(!this.subject() || !this.topic() || !this.gradeLevel()) {
       alert("Por favor llena Materia, Grado y Tema Principal.");
@@ -109,7 +113,7 @@ export class AppComponent {
         margin:       10,
         filename:     `Planeacion_${this.topic() || 'Clase'}.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 3, useCORS: true, letterRendering: true, logging: false },
+        html2canvas: { scale: 3, useCORS: true, logging: true },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
       };
@@ -118,6 +122,59 @@ export class AppComponent {
     } catch(err) {
       console.error('Error al generar PDF', err);
       alert('Hubo un problema al generar el PDF.');
+    }
+  }
+
+  async testRenderHeader() {
+    let headerElement = document.querySelector('#pdf-content header') as HTMLElement;
+    if (!headerElement) {
+      // Forzar un header fake para test puro
+      headerElement = document.createElement('header');
+      headerElement.innerHTML = `
+        <h1>Test Title: Épico y fugaz (pjqg ty)</h1>
+        <div class="meta-container">
+          <span>Badge: Ágil y jqpy</span>
+        </div>
+      `;
+    }
+    try {
+      await document.fonts.ready;
+      
+      // Aislar el header forzando una caja de prueba
+      const testContainer = document.createElement('div');
+      testContainer.id = 'pdf-content';
+      testContainer.style.position = 'absolute';
+      testContainer.style.top = '-9999px';
+      testContainer.style.left = '-9999px';
+      testContainer.style.width = '800px';
+      testContainer.style.background = '#ffffff';
+      
+      const clonedHeader = headerElement.cloneNode(true) as HTMLElement;
+      // Añadir texto con ascendentes y descendentes (p, q, y, j, f, t) para testear recorte
+      const h1 = clonedHeader.querySelector('h1');
+      if (h1) h1.textContent = 'Test Title: Épico y fugaz (pjqg ty)';
+      
+      const spans = clonedHeader.querySelectorAll('span');
+      spans.forEach(s => s.textContent = 'Badge: Ágil y jqpy');
+
+      testContainer.appendChild(clonedHeader);
+      document.body.appendChild(testContainer);
+
+      const opt = {
+        margin:       10,
+        filename:     `Test_Header_Render.pdf`,
+        image:        { type: 'jpeg', quality: 1.0 },
+        html2canvas: { scale: 3, useCORS: true, logging: true },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
+      };
+      
+      console.log('--- START PURE RENDER TEST ---');
+      await html2pdf().set(opt as any).from(clonedHeader).save();
+      console.log('--- END PURE RENDER TEST ---');
+      
+      document.body.removeChild(testContainer);
+    } catch(err) {
+      console.error('Error en test render', err);
     }
   }
 }

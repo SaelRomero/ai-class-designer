@@ -13,7 +13,7 @@ body {
   * {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
+    text-rendering: auto;
     word-break: break-word;
     overflow-wrap: break-word;
   }
@@ -40,8 +40,9 @@ body {
       letter-spacing: normal;
       margin: 0 0 1rem 0;
       color: #ffffff;
-      line-height: 1.4; /* Line-height sano para evitar recortes en la parte superior/inferior */
-      overflow: visible; /* Asegurar que no haya recortes */
+      line-height: normal;
+      padding: 0.2em 0;
+      overflow: visible;
     }
 
     .meta-container {
@@ -51,18 +52,19 @@ body {
     }
 
     span {
-      display: inline-block;
-      /* Eliminamos hacks: padding simétrico exacto */
-      padding: 0.4rem 1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      padding: 0.25rem 0.75rem;
       border-radius: 9999px;
       font-size: 0.75rem;
-      font-weight: 600; /* Un poco más de peso para legibilidad en impresión */
+      font-weight: 600;
       letter-spacing: normal;
       color: #f8fafc;
       text-transform: uppercase;
       background-color: rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.05);
-      /* Restablecemos line-height natural para que el motor del navegador centre el texto según sus ascencentes/descendentes */
       line-height: normal; 
       vertical-align: middle;
       overflow: visible;

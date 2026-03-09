@@ -123,7 +123,7 @@ export class AppComponent {
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 3, useCORS: true, logging: true },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+        pagebreak:    { mode: ['css', 'legacy'], avoid: ['.keep-together', '.stage', 'header', 'h2', 'h3', 'li'] }
       };
       
       html2pdf().set(opt as any).from(element).save();

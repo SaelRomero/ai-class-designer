@@ -95,9 +95,10 @@
           </section>
 
           <section class="card">
-            <h2>Desarrollo de la Clase</h2>
-            
-            @if (lesson.inicio && lesson.inicio.length > 0) {
+            <div class="keep-together">
+              <h2>Desarrollo de la Clase</h2>
+              
+              @if (lesson.inicio && lesson.inicio.length > 0) {
               <article class="stage">
                 <h3>Inicio</h3>
                 <ul>
@@ -107,6 +108,7 @@
                 </ul>
               </article>
             }
+            </div>
 
             @if (lesson.desarrollo && lesson.desarrollo.length > 0) {
               <article class="stage">

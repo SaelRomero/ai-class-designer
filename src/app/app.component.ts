@@ -148,6 +148,14 @@ export class AppComponent implements OnInit {
     this.refineLesson();
   }
 
+  // Motor de Evaluación (Fase 3)
+  generateRubric() {
+    if (!this.generatedLesson()) return;
+    this.refinementPrompt.set("Agrega al final del documento una Rúbrica de Evaluación detallada para esta clase. Usa estrictamente una tabla en formato Markdown con las columnas: Criterio, Excelente, Bueno, Suficiente y Requiere Mejora. No borres el contenido original de la clase, solo anexa la tabla al final.");
+    this.refineLesson();
+  }
+
+
 
   async refineLesson() {
     if (!this.refinementPrompt().trim() || !this.generatedLesson()) {

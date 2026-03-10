@@ -114,6 +114,23 @@
             </div>
           </div>
 
+          <div class="mt-4 mb-4">
+            <span class="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              Herramientas de Evaluación (Fase 3)
+            </span>
+            <div class="flex flex-wrap gap-1.5">
+                <button 
+                  (click)="generateRubric()"
+                  [disabled]="isRefining()"
+                  class="text-xs flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition-colors focus:ring-2 focus:ring-emerald-500 disabled:opacity-50 font-medium active:scale-[0.98]"
+                  title="Añadir tabla de evaluación al final del documento">
+                  <span>📊</span> Rúbrica de Evaluación
+                </button>
+            </div>
+          </div>
+
+
           <textarea [(ngModel)]="refinementPrompt" rows="3" placeholder="Ej. Haz que la clase sea más divertida, añade un juego al inicio..." class="px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 hover:border-slate-400 transition-colors shadow-sm outline-none w-full resize-none"></textarea>
           
           <button

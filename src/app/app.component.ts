@@ -287,6 +287,83 @@ export class AppComponent implements OnInit {
     }
   }
 
+  
+  downloadTxt() {
+    const lesson = this.generatedLesson();
+    if (!lesson) return;
+    
+    let txt = `====================================================\n`;
+    txt += `PLANEACIÓN DE CLASE: ${lesson.titulo}\n`;
+    txt += `====================================================\n\n`;
+    txt += `▶ DATOS GENERALES\n`;
+    txt += `- Grado: ${lesson.grado}\n`;
+    txt += `- Materia: ${lesson.materia}\n`;
+    txt += `- Tema: ${lesson.tema}\n`;
+    txt += `- Duración: ${lesson.duracion}\n\n`;
+
+    if (lesson.camposFormativos && lesson.camposFormativos.length > 0) {
+      txt += `▶ CAMPOS FORMATIVOS (NEM)\n`;
+      lesson.camposFormativos.forEach(c => txt += `- ${c.campo}: ${c.vinculacion}\n`);
+      txt += `\n`;
+    }
+
+    if (lesson.ejesArticuladores && lesson.ejesArticuladores.length > 0) {
+      txt += `▶ EJES ARTICULADORES\n`;
+      lesson.ejesArticuladores.forEach(e => txt += `- ${e}\n`);
+      txt += `\n`;
+    }
+
+    txt += `▶ OBJETIVOS\n`;
+    lesson.objetivos.forEach(o => txt += `- ${o}\n`);
+    txt += `\n`;
+
+    txt += `▶ MATERIALES\n`;
+    lesson.materiales.forEach(m => txt += `- ${m}\n`);
+    txt += `\n`;
+
+    txt += `====================================================\n`;
+    txt += `DESARROLLO DE LA CLASE\n`;
+    txt += `====================================================\n\n`;
+
+    txt += `[INICIO]\n`;
+    lesson.inicio.forEach(i => txt += `- ${i}\n`);
+    txt += `\n`;
+
+    txt += `[DESARROLLO]\n`;
+    lesson.desarrollo.forEach(d => {
+      txt += `* ${d.titulo} (${d.duracion})\n`;
+      txt += `  ${d.descripcion}\n`;
+    });
+    txt += `\n`;
+
+    txt += `[CIERRE]\n`;
+    lesson.cierre.forEach(c => txt += `- ${c}\n`);
+    txt += `\n`;
+
+    txt += `====================================================\n`;
+    txt += `EVALUACIÓN Y OBSERVACIONES\n`;
+    txt += `====================================================\n\n`;
+
+    txt += `▶ EVALUACIÓN\n`;
+    lesson.evaluacion.forEach(e => txt += `- ${e}\n`);
+    txt += `\n`;
+
+    if (lesson.observaciones) {
+      txt += `▶ OBSERVACIONES / RÚBRICA\n`;
+      txt += `${lesson.observaciones}\n`;
+    }
+
+    const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Planeacion_${lesson.titulo || 'Clase'}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  }
+
   async downloadPDF() {
     const element = document.getElementById('pdf-content');
     if (!element) return;

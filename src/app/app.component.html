@@ -95,6 +95,25 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
             Refinar Planeación
           </h3>
+          
+          <div class="mt-4 mb-4">
+            <span class="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+              Adaptaciones Rápidas (Inclusión)
+            </span>
+            <div class="flex flex-wrap gap-1.5">
+              @for (adapt of quickAdaptations; track adapt.id) {
+                <button 
+                  (click)="applyQuickAdaptation(adapt)"
+                  [disabled]="isRefining()"
+                  class="text-xs flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 transition-colors focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 font-medium active:scale-[0.98]"
+                  title="Aplica adaptaciones para {{ adapt.label }}">
+                  <span>{{ adapt.icon }}</span> {{ adapt.label }}
+                </button>
+              }
+            </div>
+          </div>
+
           <textarea [(ngModel)]="refinementPrompt" rows="3" placeholder="Ej. Haz que la clase sea más divertida, añade un juego al inicio..." class="px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 hover:border-slate-400 transition-colors shadow-sm outline-none w-full resize-none"></textarea>
           
           <button

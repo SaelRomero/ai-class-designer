@@ -134,6 +134,21 @@ export class AppComponent implements OnInit {
   refinementPrompt = signal('');
   isRefining = signal(false);
 
+  // Adaptaciones Inclusivas (Fase 2)
+  quickAdaptations = [
+    { id: 'tdah', label: 'TDAH', icon: '⚡', prompt: 'Modifica y adapta esta clase para alumnos con TDAH. Incluye periodos más cortos de atención, pausas activas, instrucciones paso a paso muy claras y material visual estimulante.' },
+    { id: 'dislexia', label: 'Dislexia', icon: '📝', prompt: 'Modifica y adapta esta clase para alumnos con Dislexia. Reduce la carga de lectura pesada en voz alta, usa más apoyos visuales/auditivos y fomenta la evaluación oral o práctica.' },
+    { id: 'tea', label: 'TEA', icon: '🧩', prompt: 'Modifica y adapta esta clase para alumnos con Trastorno del Espectro Autista (TEA). Crea una estructura predecible, transiciones claras, minimiza la sobrecarga sensorial e incluye apoyos visuales y concretos.' },
+    { id: 'altas', label: 'Altas Capac.', icon: '🚀', prompt: 'Modifica y adapta esta clase para alumnos con Altas Capacidades. Incluye actividades de extensión, retos cognitivos más profundos, pensamiento crítico extra y fomenta la investigación autónoma.' }
+  ];
+
+  applyQuickAdaptation(adaptation: any) {
+    if (!this.generatedLesson()) return;
+    this.refinementPrompt.set(adaptation.prompt);
+    this.refineLesson();
+  }
+
+
   async refineLesson() {
     if (!this.refinementPrompt().trim() || !this.generatedLesson()) {
       return;

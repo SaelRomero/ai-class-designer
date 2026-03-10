@@ -40,6 +40,37 @@ export class AppComponent {
   duration = signal('50');
   specialRequirements = signal('');
 
+  // NEM Options
+  camposOptions = [
+    'Lenguajes',
+    'Saberes y Pensamiento Científico',
+    'Ética, Naturaleza y Sociedades',
+    'De lo Humano y lo Comunitario'
+  ];
+
+  ejesOptions = [
+    'Inclusión',
+    'Pensamiento Crítico',
+    'Interculturalidad Crítica',
+    'Igualdad de Género',
+    'Vida Saludable',
+    'Apropiación de las culturas a través de la lectura y la escritura',
+    'Artes y experiencias estéticas'
+  ];
+
+  selectedCampos = signal<string[]>([]);
+  selectedEjes = signal<string[]>([]);
+
+  toggleSelection(list: ReturnType<typeof signal<string[]>>, item: string) {
+    const current = list();
+    if (current.includes(item)) {
+      list.set(current.filter(i => i !== item));
+    } else {
+      list.set([...current, item]);
+    }
+  }
+
+
   // UI State
   isGenerating = signal(false);
   generatedLesson = signal<LessonPlan | null>(null);
@@ -61,7 +92,9 @@ export class AppComponent {
           gradeLevel: this.gradeLevel(),
           topic: this.topic(),
           duration: this.duration(),
-          specialRequirements: this.specialRequirements()
+          specialRequirements: this.specialRequirements(),
+          campos: this.selectedCampos(),
+          ejes: this.selectedEjes()
         })
       });
 

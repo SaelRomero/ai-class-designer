@@ -72,6 +72,45 @@
             </div>
           </header>
 
+          <!-- Nueva Escuela Mexicana (NEM) -->
+          @if ((lesson.camposFormativos && lesson.camposFormativos.length > 0) || (lesson.ejesArticuladores && lesson.ejesArticuladores.length > 0)) {
+            <section class="card keep-together bg-indigo-50/30 border border-indigo-100 p-6 rounded-xl mb-6">
+              <h2 class="text-indigo-800 border-b border-indigo-200 pb-2 mb-4 flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                Elementos de la Nueva Escuela Mexicana
+              </h2>
+              
+              @if (lesson.camposFormativos && lesson.camposFormativos.length > 0) {
+                <div class="mb-5">
+                  <h3 class="text-sm font-bold text-slate-600 uppercase tracking-wider mb-3">Campos Formativos</h3>
+                  <div class="space-y-3">
+                    @for (cf of lesson.camposFormativos; track $index) {
+                      <div class="bg-white p-3 rounded-lg border border-indigo-50 shadow-sm">
+                        <span class="block font-semibold text-indigo-900 mb-1">{{ cf.campo }}</span>
+                        <span class="text-slate-600 text-sm leading-relaxed">{{ cf.vinculacion }}</span>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+
+              @if (lesson.ejesArticuladores && lesson.ejesArticuladores.length > 0) {
+                <div>
+                  <h3 class="text-sm font-bold text-slate-600 uppercase tracking-wider mb-3">Ejes Articuladores</h3>
+                  <div class="flex flex-wrap gap-2">
+                    @for (eje of lesson.ejesArticuladores; track $index) {
+                      <span class="px-3 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-sm font-medium flex items-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        {{ eje }}
+                      </span>
+                    }
+                  </div>
+                </div>
+              }
+            </section>
+          }
+
+
           <section class="card">
             <h2>Objetivos</h2>
             <ul>
@@ -109,20 +148,7 @@
               </article>
             }
 
-        <!-- Ejes Articuladores (NEM) -->
-        @if (planGenerado()?.ejesArticuladores && planGenerado()?.ejesArticuladores!.length > 0) {
-          <div class="mb-6">
-            <h4 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3">Ejes Articuladores</h4>
-            <div class="flex flex-wrap gap-2">
-              @for (eje of planGenerado()?.ejesArticuladores; track $index) {
-                <span class="px-3 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-sm font-medium flex items-center gap-1">
-                  <lucide-icon name="check-circle" [size]="14"></lucide-icon>
-                  {{ eje }}
-                </span>
-              }
-            </div>
-          </div>
-        }
+        
 
             </div>
 

@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -6,6 +6,8 @@ import html2pdf from 'html2pdf.js';
 
 
 export interface LessonPlan {
+  id?: string;
+  updatedAt?: number;
   titulo: string;
   grado: string;
   duracion: string;
@@ -29,7 +31,61 @@ export interface LessonPlan {
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+// Autoguardado e Historial
+  lessonHistory = signal<LessonPlan[]>([]);
+
+  ngOnInit() {
+    this.loadHistory();
+  }
+
+  loadHistory() {
+    try {
+      const savedHistory = localStorage.getItem('lessonHistory');
+      if (savedHistory) {
+        this.lessonHistory.set(JSON.parse(savedHistory));
+      }
+      const currentLesson = localStorage.getItem('currentLesson');
+      if (currentLesson) {
+        this.generatedLesson.set(JSON.parse(currentLesson));
+      }
+    } catch (e) {
+      console.error('Error loading history', e);
+    }
+  }
+
+  saveToHistory(lesson: LessonPlan) {
+    lesson.id = lesson.id || Date.now().toString();
+    lesson.updatedAt = Date.now();
+    
+    const currentHistory = this.lessonHistory();
+    const index = currentHistory.findIndex(l => l.id === lesson.id);
+    
+    let newHistory;
+    if (index !== -1) {
+      newHistory = [...currentHistory];
+      newHistory[index] = lesson;
+    } else {
+      newHistory = [lesson, ...currentHistory].slice(0, 15); // Keep last 15
+    }
+    
+    this.lessonHistory.set(newHistory);
+    localStorage.setItem('lessonHistory', JSON.stringify(newHistory));
+    localStorage.setItem('currentLesson', JSON.stringify(lesson));
+  }
+
+  loadFromHistory(lesson: LessonPlan) {
+    this.generatedLesson.set(lesson);
+    localStorage.setItem('currentLesson', JSON.stringify(lesson));
+  }
+
+  clearCurrentLesson() {
+    if (confirm('¿Estás seguro de que quieres crear una nueva planeación? Se mantendrá en tu historial.')) {
+      this.generatedLesson.set(null);
+      localStorage.removeItem('currentLesson');
+    }
+  }
+
   title = 'ai-class-designer';
   
 
@@ -74,6 +130,70 @@ export class AppComponent {
   // UI State
   isGenerating = signal(false);
   generatedLesson = signal<LessonPlan | null>(null);
+
+  refinementPrompt = signal('');
+  isRefining = signal(false);
+
+  async refineLesson() {
+    if (!this.refinementPrompt().trim() || !this.generatedLesson()) {
+      return;
+    }
+    
+    this.isRefining.set(true);
+
+    try {
+      const response = await fetch('/ai-class-designer-api/refine', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          currentPlan: this.generatedLesson(),
+          prompt: this.refinementPrompt()
+        })
+      });
+
+      if (!response.ok) throw new Error(`Error del servidor: ${response.status} ${response.statusText}`);
+      
+      const data = await response.json();
+      const rawResponse = data.html || '';
+      
+      const startIndex = rawResponse.indexOf('{');
+      const endIndex = rawResponse.lastIndexOf('}');
+      
+      if (startIndex === -1 || endIndex === -1) {
+        throw new Error('El modelo no devolvió un JSON válido');
+      }
+      
+      const jsonString = rawResponse.substring(startIndex, endIndex + 1);
+      const parsedData = JSON.parse(jsonString) as LessonPlan;
+      
+      parsedData.objetivos = parsedData.objetivos || ['No se especificaron objetivos'];
+      parsedData.materiales = parsedData.materiales || ['No se especificaron materiales'];
+      parsedData.inicio = parsedData.inicio || [];
+      
+      if (Array.isArray(parsedData.desarrollo)) {
+        parsedData.desarrollo = parsedData.desarrollo.map(item => {
+          if (typeof item === 'string') {
+            return { titulo: 'Actividad de desarrollo', descripcion: item, duracion: 'Tiempo estimado' };
+          }
+          return item;
+        });
+      } else {
+        parsedData.desarrollo = [];
+      }
+
+      parsedData.cierre = parsedData.cierre || [];
+      parsedData.evaluacion = parsedData.evaluacion || [];
+      
+      this.generatedLesson.set(parsedData);
+      this.saveToHistory(parsedData);
+      this.refinementPrompt.set('');
+    } catch (error) {
+      console.error(error);
+      alert(`Hubo un error al refinar: ${error instanceof Error ? error.message : 'Desconocido'}.`);
+    } finally {
+      this.isRefining.set(false);
+    }
+  }
 
   async generateLesson() {
     if(!this.subject() || !this.topic() || !this.gradeLevel()) {
@@ -135,6 +255,7 @@ export class AppComponent {
       parsedData.evaluacion = parsedData.evaluacion || [];
       
       this.generatedLesson.set(parsedData);
+      this.saveToHistory(parsedData);
     } catch (error) {
       console.error(error);
       alert(`Hubo un error: ${error instanceof Error ? error.message : 'Desconocido'}. Revisa la conexión o intenta de nuevo si fue un timeout por carga del modelo.`);

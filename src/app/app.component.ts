@@ -12,6 +12,7 @@ export interface LessonPlan {
   materia: string;
   tema: string;
   camposFormativos?: { campo: string, vinculacion: string }[];
+  ejesArticuladores?: string[];
   objetivos: string[];
   materiales: string[];
   inicio: string[];

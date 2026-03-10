@@ -108,6 +108,22 @@
                 </ul>
               </article>
             }
+
+        <!-- Ejes Articuladores (NEM) -->
+        @if (planGenerado()?.ejesArticuladores && planGenerado()?.ejesArticuladores!.length > 0) {
+          <div class="mb-6">
+            <h4 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3">Ejes Articuladores</h4>
+            <div class="flex flex-wrap gap-2">
+              @for (eje of planGenerado()?.ejesArticuladores; track $index) {
+                <span class="px-3 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-sm font-medium flex items-center gap-1">
+                  <lucide-icon name="check-circle" [size]="14"></lucide-icon>
+                  {{ eje }}
+                </span>
+              }
+            </div>
+          </div>
+        }
+
             </div>
 
             @if (lesson.desarrollo && lesson.desarrollo.length > 0) {

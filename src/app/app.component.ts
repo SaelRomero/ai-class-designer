@@ -98,7 +98,7 @@ export class AppComponent {
         })
       });
 
-      if (!response.ok) throw new Error('Error en la red');
+      if (!response.ok) throw new Error(`Error del servidor: ${response.status} ${response.statusText}`);
       
       const data = await response.json();
       const rawResponse = data.html || '';
@@ -137,7 +137,7 @@ export class AppComponent {
       this.generatedLesson.set(parsedData);
     } catch (error) {
       console.error(error);
-      alert('Hubo un error al generar la planeación. Revisa que el proxy y Ollama estén corriendo.');
+      alert(`Hubo un error: ${error instanceof Error ? error.message : 'Desconocido'}. Revisa la conexión o intenta de nuevo si fue un timeout por carga del modelo.`);
     } finally {
       this.isGenerating.set(false);
     }

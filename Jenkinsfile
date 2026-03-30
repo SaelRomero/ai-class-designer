@@ -19,10 +19,18 @@ pipeline {
     
     post {
         success {
-            echo '✅ La aplicación se ha desplegado correctamente en producción.'
+            sh """
+                curl -s -X POST "https://api.telegram.org/bot7932825981:AAF_6nQ2th9ooxCrGkmiAlw_TnGNajn4tSU/sendMessage" \
+                    -H "Content-Type: application/json" \
+                    -d "{\"chat_id\": \"8669443470\", \"text\": \"✅ \${JOB_NAME} #\${BUILD_NUMBER} completado\\n🔗 \${BUILD_URL}\"}"
+            """
         }
         failure {
-            echo '❌ Ocurrió un error al intentar desplegar. Revisa los logs de Jenkins.'
+            sh """
+                curl -s -X POST "https://api.telegram.org/bot7932825981:AAF_6nQ2th9ooxCrGkmiAlw_TnGNajn4tSU/sendMessage" \
+                    -H "Content-Type: application/json" \
+                    -d "{\"chat_id\": \"8669443470\", \"text\": \"❌ \${JOB_NAME} #\${BUILD_NUMBER} falló\\n🔗 \${BUILD_URL}console\"}"
+            """
         }
     }
 }
